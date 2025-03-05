@@ -1,31 +1,40 @@
-FROM node:18-alpine3.17
+# Stage 1: Build stage
+FROM node:22-alpine AS build
+
+WORKDIR /quickchart
+
+# Install necessary packages for building
+RUN apk add --no-cache git build-base cairo-dev pango-dev 
+    
+# Copy package.json and yarn.lock
+COPY package*.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install --production
+
+# Stage 2: Runtime stage
+FROM node:22-alpine
 
 ENV NODE_ENV production
 
 WORKDIR /quickchart
 
-RUN apk add --upgrade apk-tools
-RUN apk add --no-cache --virtual .build-deps yarn git build-base g++ python3
-RUN apk add --no-cache --virtual .npm-deps cairo-dev pango-dev libjpeg-turbo-dev librsvg-dev
-RUN apk add --no-cache --virtual .fonts libmount ttf-dejavu ttf-droid ttf-freefont ttf-liberation font-noto font-noto-emoji fontconfig
-RUN apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/community font-wqy-zenhei
-RUN apk add --no-cache libimagequant-dev
-RUN apk add --no-cache vips-dev
-RUN apk add --no-cache --virtual .runtime-deps graphviz
+# Install runtime dependencies
+RUN apk add --no-cache cairo pango libjpeg-turbo librsvg libimagequant vips graphviz
 
-COPY package*.json .
-COPY yarn.lock .
-RUN yarn install --production
+# Additional fonts 65 mo
+#RUN apk add --no-cache ttf-dejavu ttf-droid ttf-freefont ttf-liberation font-noto font-noto-emoji fontconfig
+#RUN apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/community font-wqy-zenhei
 
-RUN apk update
-RUN rm -rf /var/cache/apk/* && \
-    rm -rf /tmp/*
-RUN apk del .build-deps
+# Copy built application from the build stage
+COPY --from=build /quickchart .
 
+# Copy application files
 COPY *.js ./
 COPY lib/*.js lib/
-COPY LICENSE .
 
+# Expose the application port
 EXPOSE 3400
 
+# Set the entrypoint
 ENTRYPOINT ["node", "--max-http-header-size=65536", "index.js"]
