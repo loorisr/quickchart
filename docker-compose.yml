@@ -1,6 +1,7 @@
 services:
   quickchart:
-    build: .
+    #build: . #to build the image
+    image: loorisr/quickchart:latest
     container_name: quickchart
     ports:
       - 3400:3400
