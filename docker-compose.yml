@@ -5,6 +5,17 @@ services:
     ports:
       - 3400:3400
     restart: unless-stopped
+    environment:
+      - WRITE_TELEMETRY_TO_CONSOLE=
+      - ENABLE_TELEMETRY_WRITE=
+      - DISABLE_TELEMETRY=true
+      - EXPRESS_JSON_LIMIT= #default 100kb
+      - RATE_LIMIT_PER_MIN= #default 10
+      - LOG_LEVEL=INFO
+      - REQUEST_TIMEOUT_MS= #default 5000
+      - PORT= #default 3400
+      - MAX_HEIGHT= #default 3000
+      - MAX_WIDTH= #default 3000
     cap_drop:
       - ALL
     read_only: true
