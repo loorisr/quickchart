@@ -1,3 +1,14 @@
+# Updated QuickChart
+
+This is an updated version of QuickChart, with:
+* Newer libraries
+* ChartJS 4 per default
+* NodeJS 22
+* Alpine 3.21
+* Multistage docker to reduce image size : 340 mo instead of 1.4 Go
+
+---
+
 QuickChart
 ---
 [![Build Status](https://api.travis-ci.com/typpo/quickchart.svg?branch=master)](https://travis-ci.com/typpo/quickchart)
