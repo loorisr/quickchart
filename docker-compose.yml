@@ -1,0 +1,12 @@
+services:
+  quickchart:
+    build: .
+    container_name: quickchart
+    ports:
+      - 3400:3400
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges=true
