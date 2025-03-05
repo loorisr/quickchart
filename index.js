@@ -207,7 +207,7 @@ function doChartjsRender(req, res, opts) {
     height,
     opts.backgroundColor,
     opts.devicePixelRatio,
-    opts.version || '2.9.4',
+    opts.version || '4.4.8',
     opts.format,
     untrustedInput,
   )
